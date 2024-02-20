@@ -1,6 +1,5 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './App.css'
@@ -12,8 +11,25 @@ import Note from './components/Note.jsx'
 
 const App = () => { 
   const [notes, setNotes] = useState([])
-  const [newNote, setNewNote] = useState('a new note...') 
+  const [newNote, setNewNote] = useState('') 
   const [showAll, setShowAll] = useState(true)
+
+  const hook = () => {
+    console.log('effect')
+    axios
+    .get('http://localhost:3001/notes')
+    .then(response => {
+      console.log('promise fulfilled')
+      setNotes(response.data)
+    })
+    .catch(error => {
+      console.log('the error is ', error)
+      setNotes([])
+    })
+  }
+  useEffect(hook, [])
+  
+  console.log('render', notes.length, 'notes')
 
   const addNote = (event) => {
     event.preventDefault()
@@ -35,6 +51,8 @@ const App = () => {
   const notesToShow = showAll
     ? notes
     : notes.filter(note => note.important === true)
+
+
 
   return (
     <div>
