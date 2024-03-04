@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './App.css'
 import Note from './components/Note.jsx'
+import noteService from './services/notes.js'
 
 
 
@@ -14,17 +15,9 @@ const App = () => {
   const [newNote, setNewNote] = useState('') 
   const [showAll, setShowAll] = useState(true)
 
-  const toggleImportanceOf = id => {
-    const url = `http://localhost:3001/notes/${id}`
-    const note = notes.find(n => n.id === id)
-    const changedNote = { ...note, important: !note.important }
-  
-    axios.put(url, changedNote).then(response => {
-      setNotes(notes.map(n => n.id !== id ? n : response.data))
-    })
-  }
 
-  const hook = () => {
+ /* 
+ const hook = () => {
     console.log('effect')
     axios
     .get('http://localhost:3001/notes')
@@ -37,9 +30,17 @@ const App = () => {
       setNotes([])
     })
   }
-  useEffect(hook, [])
+
   
-  console.log('render', notes.length, 'notes')
+  const toggleImportanceOf = id => {
+    const url = `http://localhost:3001/notes/${id}`
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+  
+    axios.put(url, changedNote).then(response => {
+      setNotes(notes.map(n => n.id !== id ? n : response.data))
+    })
+  }
 
   const addNote = (event) => {
     event.preventDefault()
@@ -56,6 +57,48 @@ const App = () => {
       setNotes(notes.concat(noteObject))
       setNewNote('')
     })
+    //console.log('button clicked', event.target)
+  }
+  */
+
+  const hook = () => {
+    noteService
+      .getAll()
+      .then(initialNotes  => {
+        setNotes(initialNotes )
+      })
+    }
+    
+
+  useEffect(hook, [])
+  
+  
+  const toggleImportanceOf = id => {
+    const note = notes.find(n => n.id === id)
+    const changedNote = { ...note, important: !note.important }
+
+    noteService
+      .update(id, changedNote)
+      .then(returnedNote => {
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
+      })
+  }
+
+
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() < 0.5,
+      //id: notes.length + 1,
+    }
+
+    noteService
+      .create(noteObject)
+      .then(returnedNote => {
+        setNotes(notes.concat(returnedNote))
+        setNewNote('')
+      })
     //console.log('button clicked', event.target)
   }
 
@@ -96,6 +139,7 @@ const App = () => {
     </div>
   )
 }
+
 
 
 export default App
