@@ -1,0 +1,32 @@
+{
+  "name": "part3",
+  "version": "1.0.0",
+  "description": "pruebas de server",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev" : "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Evelin Fuster",
+  "license": "ISC",
+  "configurations": [
+    {
+      "name": "Chrome",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceRoot}/src",
+      "runtimeArgs": [
+        "--disable-web-security"
+      ]
+    }
+  ],
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}
