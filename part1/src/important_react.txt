@@ -1,0 +1,27 @@
+To start the app
+    npm run dev -- --hot
+
+React
+    Componets allways start with capitalized characters.
+
+    React components need a root element like <div>
+    or maybe use an array of elements 
+    const App = () => {
+    return [
+        <h1>Greetings</h1>,
+        <Hello name='Maya' age={26 + 10} />,
+        <Footer />
+    ]
+    }
+    or fragments, enclosed between <> .... </>
+
+
+Javascript
+    iife
+
+
+    In javascript its important to use de quote "use strict" to prevent the use of global vars
+    its important to only use let and constant
+
+    push add to the array
+    .concate create a new aray with adding 
