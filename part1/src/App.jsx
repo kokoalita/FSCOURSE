@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import Note from './components/Note'
+
 const Display = props => <div>{props.value}</div>
 
 const Button2 = (props) =>{
@@ -32,16 +34,13 @@ const History = (props) => {
   )
 }
 
-const App = (props) => {
-  const { notes } = props
-
+const App = ({ notes }) => {
+  
   return (
     <div>
       <h1>Notes</h1>
       <ul>
-        <li>{notes[0].content}</li>
-        <li>{notes[1].content}</li>
-        <li>{notes[2].content}</li>
+        {notes.map(note =>  <Note key={note.id} note={note} />)}
       </ul>
     </div>
   )
