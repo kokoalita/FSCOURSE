@@ -25,3 +25,6 @@ Javascript
 
     push add to the array
     .concate create a new aray with adding 
+
+    To print errors its importat not to use + like Java
+    console.log('props value is', props)

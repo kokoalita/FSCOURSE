@@ -2,25 +2,26 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 
-let counter = 1
+const notes = [
+  {
+    id: 1,
+    content: 'HTML is easy',
+    important: true
+  },
+  {
+    id: 2,
+    content: 'Browser can execute only JavaScript',
+    important: false
+  },
+  {
+    id: 3,
+    content: 'GET and POST are the most important methods of HTTP protocol',
+    important: true
+  }
+]
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <App notes={notes} />
   </StrictMode>,
 )
-/*const root = createRoot(document.getElementById('root'))
-
-
-const refresh = () => {
-  root.render(
-    <App counter={counter} />
-  )
-  console.log((counter))
-  }
-
-  setInterval(() => {
-    refresh()
-    counter +=1
-  }, 1000)
-*/
