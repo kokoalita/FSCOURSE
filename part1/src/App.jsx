@@ -1,106 +1,60 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import Note from './components/Note'
 
-const Display = props => <div>{props.value}</div>
 
-const Button2 = (props) =>{
-  console.log(props)
-  const { handleClick, text } = props
-  return  <button onClick={handleClick}>
-                                    {text}
-                                  </button>
-} 
-const Button = (props) => (
-  <button onClick={props.handleClick}>
-    {props.text}
-  </button>
-)
-
-
-const History = (props) => {
-  if (props.allClicks.length === 0) {
-    return (
-      <div>
-        the app is used by pressing the buttons
-      </div>
-    )
-  }
-  return (
-    <div>
-      button press history: {props.allClicks.join(' ')}
-    </div>
+const App = (props) => {
+  const [notes, setNotes] = useState(props.notes)
+  const [newNote, setNewNote] = useState(
+    'a new note...'
   )
-}
+  const [showAll, setShowAll] = useState(true)
+  const handleNoteChange = (event) => {
+    console.log(event.target.value)
+    setNewNote(event.target.value)
+  }
+  const addNote = (event) => {
+    event.preventDefault()
+    const noteObject = {
+      content: newNote,
+      important: Math.random() < 0.5,
+      id: String(notes.length + 1),
+    }
+    setNotes(notes.concat(noteObject))
+    setNewNote('')
+    
+    console.log('button clicked', event.target)
+    console.log(event.target)
+  }
 
-const App = ({ notes }) => {
-  
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important)
   return (
     <div>
       <h1>Notes</h1>
+      <div>
+        <button onClick={() => setShowAll(!showAll)}>
+          show {showAll ? 'important' : 'all'}
+        </button>
+      </div>
       <ul>
-        {notes.map(note =>  <Note key={note.id} note={note} />)}
+        {notesToShow.map(note =>  <Note key={note.id} note={note} />)}
       </ul>
+      <form onSubmit={addNote}>
+        <input value={newNote} onChange={handleNoteChange}/>
+        <button type="submit">save</button>
+      </form>   
     </div>
   )
 }
-
-const App3 = () => {
-  const [value, setValue] = useState(10)
-  
-  const setToValue = (newValue) => () => {
-    console.log('value now', newValue)  // print the new value to console
-    setValue(newValue)
+const addNote = (event) => {
+  event.preventDefault()
+  const newNote = {
+    id: notes.length + 1,
+    content: event.target.value,
   }
-  
-  return (
-    <div>
-    <Display value={value} />
-      <Button handleClick={() => setToValue(1000)} text="thousand" />
-      <Button handleClick={() => setToValue(0)} text="reset" />
-      <Button handleClick={() => setToValue(value + 1)} text="increment" />
-    </div>
-  )
-}
-const App2 = () => {
-  const [left, setLeft] = useState(0)
-  const [right, setRight] = useState(0)
-  const [allClicks, setAll] = useState([])
-  const [total, setTotal] = useState(0)
-
-  const handleLeftClick = () => {
-    setAll(allClicks.concat('L'))
-    const updatedLeft = left + 1
-    setLeft(updatedLeft)
-    setTotal(updatedLeft + right)
-  }
-
-  const handleRightClick = () => {
-    setAll(allClicks.concat('R'))
-    const updatedRight = right +1 
-    setRight(updatedRight)
-    setTotal(left + updatedRight)
-  }
-
-  const handleResetClick = () => {
-    setLeft(0)
-    setRight(0)
-    setAll([])
-    setTotal(0)
-  }
-
-  return (
-    <div>
-      {left}
-      <Button handleClick={handleLeftClick} text='left' />
-      <Button handleClick={handleRightClick} text='right' />
-      {right}
-      <History allClicks={allClicks} />
-      <p>total {total}</p>
-      <Button handleClick={handleResetClick} text='reset' />
-    </div>
-  )
+  setNotes([...notes, newNote])
+  event.target.value = ''
 }
 
 export default App

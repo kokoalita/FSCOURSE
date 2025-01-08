@@ -28,3 +28,6 @@ Javascript
 
     To print errors its importat not to use + like Java
     console.log('props value is', props)
+
+    In java its better to use === instead of == for comparasions because ts safely
+    
