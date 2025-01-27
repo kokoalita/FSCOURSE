@@ -7,8 +7,8 @@ if (process.argv.length<3) {
 
 const password = process.argv[2]
 
-const url =
-  `mongodb+srv://kokoalita:${password}@fscoursec0.ano7j.mongodb.net/noteApp?retryWrites=true&w=majority`
+const url = process.env.MONGODB_URI;
+  
 
 mongoose.set('strictQuery',false)
 
@@ -31,6 +31,7 @@ note.save().then(result => {
   mongoose.connection.close()
 })*/
 
+//Note.find({ important: true })
 Note.find({}).then(result => {
     result.forEach(note => {
       console.log(note)
