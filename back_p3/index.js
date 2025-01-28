@@ -1,19 +1,10 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
 
 
-const password = process.argv[2]
-const url =
-  `mongodb+srv://kokoalita:${password}@fscoursec0.ano7j.mongodb.net/noteApp?retryWrites=true&w=majority`
-  
-mongoose.set('strictQuery',false)
-mongoose.connect(url)
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-const Note = mongoose.model('Note', noteSchema)
+const Note = require('./models/note')
 
 const app = express()
 app.use(express.static('dist'))
@@ -31,42 +22,20 @@ const requestLogger = (request, response, next) => {
 }
 app.use(requestLogger)
 
-let notes = [
-    {
-      id: "1",
-      content: "HTML idds easy",
-      important: true
-    },
-    {
-      id: "2",
-      content: "Browser can execute only JavaScript",
-      important: false
-    },
-    {
-      id: "3",
-      content: "GET and POST are the most important methods of HTTP protocol",
-      important: true
-    }
-  ]
+let notes = []
 
   const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
-  }
-
-
-  const generateId = () => {
-    const maxId = notes.length > 0
-      ? Math.max(...notes.map(n => Number(n.id)))
-      : 0
-    return String(maxId + 1)
-  }
-
+  } 
+  
   app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
   })
 
   app.get('/api/notes', (request, response) => {
-    response.json(notes)
+    Note.find({}).then(notes => {
+      response.json(notes)
+    })
   })
 
   app.post('/api/notes', (request, response) => {
@@ -80,10 +49,12 @@ let notes = [
     const note = {
       content: body.content,
       important: Boolean(body.important) || false,
-      id: generateId(),
+      //id: generateId(),
     }
-    notes = notes.concat(note)
-    
+    //notes = notes.concat(note)
+    note.save().then(savedNote => {
+      response.json(savedNote)
+    })
     response.json(note)
   })
 
