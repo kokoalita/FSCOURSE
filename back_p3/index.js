@@ -46,16 +46,17 @@ let notes = []
       })
     }
 
-    const note = {
+    const note = new Note({
       content: body.content,
-      important: Boolean(body.important) || false,
-      //id: generateId(),
-    }
-    //notes = notes.concat(note)
+      important: Boolean(body.important) || false
+    })
+    
     note.save().then(savedNote => {
       response.json(savedNote)
     })
     response.json(note)
+    console.log('no se que esta  pasando')
+    
   })
 
   app.get('/api/notes/:id', (request, response) => {
