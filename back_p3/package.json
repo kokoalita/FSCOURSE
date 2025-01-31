@@ -8,7 +8,8 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:ui": "rm -rf dist && cd ../part1 && npm run build && cp -r dist ../back_p3",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && node index.js"
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && node index.js",
+    "lint": "eslint ."
   },
   "author": "efv",
   "license": "ISC",
@@ -19,6 +20,11 @@
     "mongoose": "^8.9.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@stylistic/eslint-plugin-js": "^3.0.1",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^15.14.0",
     "nodemon": "^3.1.9"
   }
 }

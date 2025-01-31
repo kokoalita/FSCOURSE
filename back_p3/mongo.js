@@ -11,26 +11,19 @@ mongoose.set('strictQuery',false)
 mongoose.connect(url)
 
 const noteSchema = new mongoose.Schema({
-  content: String,
+  content:  {
+    type: String,
+    minLength: 5,
+    required: [true, 'content is required']
+  },
   important: Boolean,
 })
 
 const Note = mongoose.model('Note', noteSchema)
 
-/*const note = new Note({
-  content: 'HTML is easy',
-  important: true,
-})
-
-note.save().then(result => {
-  console.log('note saved!')
-  mongoose.connection.close()
-})*/
-
-//Note.find({ important: true })
 Note.find({}).then(result => {
-    result.forEach(note => {
-      console.log(note)
-    })
-    mongoose.connection.close()
+  result.forEach(note => {
+    console.log(note)
   })
+  mongoose.connection.close()
+})

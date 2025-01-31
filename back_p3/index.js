@@ -27,6 +27,23 @@ let notes = []
   const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
   } 
+  const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+    console.error('--------')
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malforddmated id' })
+    }
+    else if(error.name === 'ValidationError'){
+
+      return response.status(400).send({ error: error.message })
+    } 
+    else{
+
+      return response.status(400).send({ error: 'error' })
+    }
+  
+  }
   
   app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
@@ -38,13 +55,27 @@ let notes = []
     })
   })
 
-  app.post('/api/notes', (request, response) => {
-    const body = request.body
-    if (!body.content) {
-      return response.status(400).json({ 
-        error: 'content missing' 
+  app.get('/api/notes/:id', (request, respons, next) => {
+    Note.findById(request.params.id)
+      .then(note => {
+        if (note) {
+          response.json(note)
+        } else {
+          response.statusMessage = "NOT FOUND"
+          response.status(404).end()
+        }
       })
-    }
+      .catch((err)=> {    
+        //response.status(400).send({ error: 'malformatted id' })
+        next(err)
+      })
+  })
+
+  app.post('/api/notes', (request, response, next) => {
+    const body = request.body
+    /*if (!body.content || body.content === undefined) {
+      return response.status(400).json({error: 'content missing'})
+    }*/
 
     const note = new Note({
       content: body.content,
@@ -54,37 +85,35 @@ let notes = []
     note.save().then(savedNote => {
       response.json(savedNote)
     })
-    response.json(note)
-    console.log('no se que esta  pasando')
+    .catch(error => next(error))
     
   })
 
-  app.get('/api/notes/:id', (request, response) => {
-    const id = request.params.id
-    const note = notes.find(note => note.id === id)
-    if(note)  
-      response.json(note)
-    else {
-      response.statusMessage = "NOT FOUND"
-      response.status(404).end()
-    }
+  app.delete('/api/notes/:id', (request, response, next) => {
+    Note.findByIdAndDelete(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
   })
 
+  app.put('/api/notes/:id', (request, response, next) => {
+    const { content, important } = request.body
 
-
-  app.delete('/api/notes/:id', (request, response) => {
-    const id = request.params.id
-    const note = notes.find(note => note.id === id)
-    if(note)  {
-      response.status(204).end()
-    }
-    else {
-      response.statusMessage = "NOT FOUND"
-      response.status(404).end()
-    }
+    Note.findByIdAndUpdate(request.params.id, 
+      
+    { content, important },
+    { new: true, runValidators: true, context: 'query' })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+    
   })
 
   app.use(unknownEndpoint)
+  // this has to be the last loaded middleware, also all the routes should be registered before this!
+  app.use(errorHandler)
 
 //const PORT = 3002
 const PORT = process.env.PORT || 3002
