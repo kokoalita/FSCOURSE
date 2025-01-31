@@ -17,14 +17,14 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB:', error.message)
   })
 
-  const noteSchema = new mongoose.Schema({
-    content:  {
-      type: String,
-      minLength: 5,
-      required: [true, 'content is required']
-    },
-    important: Boolean,
-  })
+const noteSchema = new mongoose.Schema({
+  content:  {
+    type: String,
+    minLength: 5,
+    required: [true, 'content is required']
+  },
+  important: Boolean,
+})
 
 noteSchema.set('toJSON', {
   transform: (document, returnedObject) => {
