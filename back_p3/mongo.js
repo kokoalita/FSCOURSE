@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const mongoose = require('mongoose')
 
-const url = process.env.MONGODB_URI
+const url = process.env.TEST_MONGODB_URI
 
 console.log(url)
 
@@ -20,6 +20,16 @@ const noteSchema = new mongoose.Schema({
 })
 
 const Note = mongoose.model('Note', noteSchema)
+
+/*const note = new Note({
+  content: 'HTML is easy 2',
+  important: true,
+})
+
+note.save().then(result => {
+  console.log('note saved!')
+ // mongoose.connection.close()
+})*/
 
 Note.find({}).then(result => {
   result.forEach(note => {
