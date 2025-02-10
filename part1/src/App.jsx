@@ -29,12 +29,7 @@ const App = () => {
     noteService.getAll()
       .then(initialNotes => {
         console.log('promise fulfilled')
-        const nonExisting = {
-          id: 10000,
-          content: 'This note is not saved to server',
-          important: true,
-        }
-        setNotes(initialNotes.concat(nonExisting))
+        setNotes(initialNotes)
       })
   }
 
@@ -44,15 +39,14 @@ const App = () => {
 
   const handleNoteChange = (event) => {
     console.log(event.target.value)
-    setNewNote(event.target.value)
+   setNewNote(event.target.value)
   }
 
   const addNote = (event) => {
     event.preventDefault()
     const noteObject = {
       content: newNote,
-      important: Math.random() < 0.5,
-      id: String(notes.length + 1),
+      important: Math.random() < 0.5
     }
 
     noteService.create(noteObject)
