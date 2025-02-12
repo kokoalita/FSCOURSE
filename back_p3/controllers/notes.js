@@ -19,17 +19,17 @@ notesRouter.get('/:id', async (request, response, next) => {
       }
     })
     .catch(error => next(error))*/
-    try {
+   // try {
       const note = await Note.findById(request.params.id)
       if (note) {
         response.json(note)
       } else {
         response.status(404).end()
       }
-    } catch(exception) {
+   /* } catch(exception) {
       response.status(400).end()
      // next(exception)
-    }
+    }*/
 })
 
 notesRouter.post('/', async (request, response, next) => {
