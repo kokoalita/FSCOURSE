@@ -1,0 +1,12 @@
+This file edscribes the steps to run and create react project 
+to create a new project with vite
+    npm create vite@latest
+to install teh required libraries
+    cd [dir]
+    npm install
+to run 
+    npm run dev
+
+    -- npm run dev --> Start the app locally for development
+    -- npm run build --> Package the app for production
+    -- npm run preview --> Preview the production build locally
