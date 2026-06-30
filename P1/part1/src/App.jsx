@@ -4,6 +4,7 @@ import viteLogo from './assets/vite.svg'
 import heroImg from './assets/hero.png'
 import './App.css'
 
+
 /*
 const App = () => (   
   <div>
@@ -22,7 +23,6 @@ const App = () => (
   )
 }
 
-*/
 
 const Hello = (props) => {
   console.log(props)
@@ -59,15 +59,15 @@ function App() //= () =>
     <div>
       <p>Hello world, it is {now.toString()}  </p>
       <Hello name="Alice" age={25} />
-      <Hello name={name} age={age} />  {/* example 2 for the props */}
+      <Hello name={name} age={age} />  
      
-     {/*  <p>{friends[0]}</p> este es el ejemplo del error */}
       <p>{friends[0].name} is {friends[0].age} years old</p>
       <p>{friends2}</p>
     </div>
   )
 }
 
+*/
 /* this is the example for returning multiple elements from a component as an array and not as a single element with a root element  
 const App = () => {
   return [
@@ -103,4 +103,182 @@ function App() //= () =>
   )
 }
 */
+
+//part c - prerendering 
+/*const App = (props) => {
+  const {counter} = props
+  console.log('Hello from component ' + counter)
+  return (
+    <div>{counter}</div>
+  )
+}*/
+
+//todo: part c - stateful component
+/*
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  console.log('Hello from component ' + counter)
+
+  setTimeout(
+    () => {
+      console.log('showing----...', counter)
+      setCounter(counter + 1)
+      console.log('showing...', counter)
+    },
+    1000
+  )
+  console.log('rendering...', counter)
+
+  return (
+    <div>{counter}</div>
+  )
+}
+*/
+
+/*
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  console.log('Hello from component ' + counter)
+  
+  const handleClick = () => {
+    console.log('clicked')
+    setCounter(counter + 1)
+  }
+  
+  const setToZero = () => setCounter(0)
+
+
+  return (
+    <div>
+      <div>{counter}</div>
+      <button onClick={handleClick}>
+        plus
+      </button>
+      <button onClick={setToZero}> 
+        zero
+      </button>
+    </div>
+  )
+}
+  */
+
+//Part 1 - c - Pasaing sttae to a child components
+/*
+const Display = (props) => {
+  return (
+    <div>{props.counter}</div>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  console.log('Hello from component ' + counter)
+  
+  const increaseByOne = () => {
+    console.log('clicked')
+    setCounter(counter + 1)
+  }
+  
+  const setToZero = () => setCounter(0)
+
+
+  return (
+    <div>
+      <Display counter={counter} />
+      <Button onClick={increaseByOne} text="plus" />
+      <Button onClick={setToZero} text="zero" />
+    </div>
+  )
+}
+  */
+
+
+//Part 1 - c - changes in the state  cause  re-render .
+/*
+const Display = (props) => {
+  return (
+    <div>{props.counter}</div>
+  )
+}
+
+const Button = (props) => {
+  return (
+    <button onClick={props.onClick}>
+      {props.text}
+    </button>
+  )
+}
+
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  console.log('Rendering with the counter value: ' + counter)
+  
+  const increaseByOne = () => {
+    console.log('increasing, value before', counter)
+    setCounter(counter + 1)
+  }
+
+  const decreaseByOne = () => { 
+    console.log('decreasing, value before', counter)
+    setCounter(counter - 1)
+  }
+  
+  const setToZero = () => {
+    console.log('resetting to zero, value before', counter)
+    setCounter(0)
+  }
+
+  return (
+    <div>
+      <Display counter={counter} />
+      <Button onClick={increaseByOne} text="plus" />
+      <Button onClick={setToZero} text="zero" />
+      <Button onClick={decreaseByOne} text="minus" />
+    </div>
+  )
+}
+*/
+
+//Part 1 - c -refactoring the components
+
+const Display = ({counter}) => <div>{counter}</div>
+
+const Button = ({ onClick, text }) =>  <button onClick={onClick}> {text} </button> 
+
+const App = () => {
+  const [counter, setCounter] = useState(0)
+  console.log('Rendering with the counter value: ' + counter)
+  
+  const increaseByOne = () => {
+    console.log('increasing, value before', counter)
+    setCounter(counter + 1)
+  }
+
+  const decreaseByOne = () => { 
+    console.log('decreasing, value before', counter)
+    setCounter(counter - 1)
+  }
+  
+  const setToZero = () => {
+    console.log('resetting to zero, value before', counter)
+    setCounter(0)
+  }
+
+  return (
+    <div>
+      <Display counter={counter} />
+      <Button onClick={increaseByOne} text="plus" />
+      <Button onClick={setToZero} text="zero" />
+      <Button onClick={decreaseByOne} text="minus" />
+    </div>
+  )
+}
 export default App
