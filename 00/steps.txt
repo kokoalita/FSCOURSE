@@ -10,3 +10,10 @@ to run
     -- npm run dev --> Start the app locally for development
     -- npm run build --> Package the app for production
     -- npm run preview --> Preview the production build locally
+
+------
+-- thingsI like 
+    * if we add debugger in some line, if we see on the console, the execution stops in the line, we can check the code there.
+    * to separate object from string use , this allows you to inspect the object 
+    * installthe debugger https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi
+  
