@@ -11,6 +11,8 @@ to run
     -- npm run build --> Package the app for production
     -- npm run preview --> Preview the production build locally
 
+to run json server 
+    json-server --port 3001 db.json
 ------
 -- thingsI like 
     * if we add debugger in some line, if we see on the console, the execution stops in the line, we can check the code there.
