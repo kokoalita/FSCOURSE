@@ -3,7 +3,7 @@
     {
       "id": "1",
       "content": "HTML is easy",
-      "important": false
+      "important": true
     },
     {
       "id": "2",
@@ -29,6 +29,16 @@
       "content": "this a ne note 2",
       "important": false,
       "id": "8A8AAt7ZLRs"
+    },
+    {
+      "content": "a new note...",
+      "important": false,
+      "id": "4EtBBN0RZ-s"
+    },
+    {
+      "content": "a new note...ter",
+      "important": true,
+      "id": "j_koNFG8NyQ"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

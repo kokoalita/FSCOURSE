@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Note from './components/Note'
-import axios from 'axios'
+import noteServices from './services/notes'
 
 const App = () => {
   const [notes, setNotes] = useState([])
@@ -11,28 +11,21 @@ const App = () => {
   
   const hook = () => {
     console.log('effect')
-    axios
-    .get('http://localhost:3001/notes')
-    .then(response => {
+    noteServices
+    .getAll()
+    .then(initialNotes => {
       console.log('promise fulfilled')
-      setNotes(response.data)
+      setNotes(initialNotes)
     })
   }
-  useEffect(hook, [])  
-  console.log('render', notes.length, 'notes')
-
-  const notesToShow = showAll
-    ? notes
-    : notes.filter(note => note.important === true)
-
+  
   const toggleImportance = (id) => {    
     console.log(`importance of ${id} needs to be toggled`)
-    const url = `http://localhost:3001/notes/${id}`
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }   
-    axios.put(url, changedNote).then(response => {
-    setNotes(notes.map(note => note.id === id ? response.data : note))
-  })
+    noteServices.update(note.id, changedNote).then(response => {
+    setNotes(notes.map(note => note.id === id ? response : note))
+    })
   }
 
   const addNote = (event) => {
@@ -41,21 +34,27 @@ const App = () => {
     const noteObject = {
       content: newNote,
       important: Math.random() < 0.5,
-    }
-       
-    axios
-    .post('http://localhost:3001/notes', noteObject)
-    .then(response => {
-      console.log(response)
-      setNotes(notes.concat(response.data))
+    }       
+    noteServices
+    .create(noteObject)
+    .then(returnedNote  => {
+      console.log(returnedNote )
+      setNotes(notes.concat(returnedNote ))
       setNewNote('')
     })
-  }
+  } 
+
+  useEffect(hook, [])  
+  console.log('render', notes.length, 'notes')
+  
+  const notesToShow = showAll
+    ? notes
+    : notes.filter(note => note.important === true)
+
   const handleNoteChange = (event) => {
     console.log(event.target.value)
     setNewNote(event.target.value)
   }
-
 
   return (
     <div>
