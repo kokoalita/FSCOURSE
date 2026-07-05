@@ -70,7 +70,9 @@ h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
-  color: var(--text-h);
+  /*color: var(--text-h);*/
+  color: green;
+  font-style: italic;
 }
 
 h1 {
@@ -108,4 +110,26 @@ code {
   line-height: 135%;
   padding: 4px 8px;
   background: var(--code-bg);
+}
+
+li {
+  color: grey;
+  padding-top: 3px;
+  font-size: 15px;
+}
+
+.note {
+  color: grey;
+  padding-top: 5px;
+  font-size: 15px;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
