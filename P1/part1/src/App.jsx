@@ -23,9 +23,15 @@ const App = () => {
     console.log(`importance of ${id} needs to be toggled`)
     const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }   
-    noteServices.update(note.id, changedNote).then(response => {
-    setNotes(notes.map(note => note.id === id ? response : note))
-    })
+    noteServices
+      .update(note.id, changedNote)
+      .then(response => {
+            setNotes(notes.map(note => note.id === id ? response : note))
+            })      
+      .catch(error => {
+        console.log('fail')
+        setNotes(notes.filter(n => n.id !== id))
+      })
   }
 
   const addNote = (event) => {
