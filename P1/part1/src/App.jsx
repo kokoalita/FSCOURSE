@@ -63,7 +63,10 @@ const App = () => {
     setNewNote(event.target.value)
   }
 
-  if(!notes) { return null
+  if(!notes) { 
+    return null
+  }
+  else{
   return (
     <div>
       <h1>Notes</h1>  
@@ -91,6 +94,7 @@ const App = () => {
     </div>
     
   )
+  }
 }
 
 export default App
