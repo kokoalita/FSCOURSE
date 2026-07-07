@@ -1,5 +1,6 @@
 import axios from 'axios'
-const baseUrl = `${import.meta.env.VITE_BACKEND_URL || 'https://fscourse-back.onrender.com'}/api/notes`
+const backendUrl = (import.meta.env.VITE_BACKEND_URL || 'https://fscourse-back.onrender.com').replace(/\/+$/, '')
+const baseUrl = `${backendUrl}/api/notes`
 
 const getAll = () => {
   const request = axios.get(baseUrl)
