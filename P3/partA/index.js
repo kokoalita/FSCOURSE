@@ -1,33 +1,34 @@
-require('dotenv').config()
+////require('dotenv').config()
 const express = require('express')
 const cors = require('cors')
 const app = express()
 const dns = require('dns')
-const mongoose = require('mongoose')
+//const mongoose = require('mongoose')
+const Note = require('./models/note')
 
 
-dns.setServers(['8.8.8.8', '1.1.1.1'])
+//dns.setServers(['8.8.8.8', '1.1.1.1'])
 
 app.use(cors())
 app.use(express.json())
 
 
-const url = process.env.MONGODB_URI
-mongoose.set('strictQuery',false)
-mongoose.connect(url, { family: 4 })
-
-const noteSchema = new mongoose.Schema({
-  content: String,
-  important: Boolean,
-})
-noteSchema.set('toJSON', {
-  transform: (document, returnedObject) => {
-    returnedObject.id = returnedObject._id.toString()
-    delete returnedObject._id
-    delete returnedObject.__v
-  }
-})
-const Note = mongoose.model('Note', noteSchema)
+//const url = process.env.MONGODB_URI
+//mongoose.set('strictQuery',false)
+//mongoose.connect(url, { family: 4 })
+//
+//const noteSchema = new mongoose.Schema({
+//  content: String,
+//  important: Boolean,
+//})
+//noteSchema.set('toJSON', {
+//  transform: (document, returnedObject) => {
+//    returnedObject.id = returnedObject._id.toString()
+//    delete returnedObject._id
+//    delete returnedObject.__v
+//  }
+//})
+//const Note = mongoose.model('Note', noteSchema)
 
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
