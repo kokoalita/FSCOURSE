@@ -11,6 +11,7 @@ const Note = require('./models/note')
 
 app.use(cors())
 app.use(express.json())
+app.use(requestLogger)
 
 
 //const url = process.env.MONGODB_URI
@@ -79,17 +80,20 @@ app.get('/api/notes/:id', (request, response) => {
       response.status(404).end()
     }
   })  
-  .catch(error => {
+  .catch(error => next(error))
+  /*.catch(error => {
     console.log(error)
     //response.status(500).end()
       response.status(400).send({ error: 'malformatted id' })
-  })
+  })*/
 })
 
 app.delete('/api/notes/:id', (request, response) => {
-  Note.findByIdAndDelete(request.params.id).then(() => {
+  Note.findByIdAndDelete(request.params.id)
+  .then(() => {
     response.status(204).end()
   })
+  .catch(error => next(error))
 })
 const unknownEndpoint = (request, response) => {
     console.log('error')
@@ -98,6 +102,19 @@ const unknownEndpoint = (request, response) => {
 }
 
 app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+
+// handler of requests that result in errors
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
