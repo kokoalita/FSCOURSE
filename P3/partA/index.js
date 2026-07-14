@@ -11,7 +11,6 @@ const Note = require('./models/note')
 
 app.use(cors())
 app.use(express.json())
-app.use(requestLogger)
 
 
 //const url = process.env.MONGODB_URI
@@ -52,7 +51,7 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if (!body || !body.content) {
@@ -69,9 +68,10 @@ app.post('/api/notes', (request, response) => {
   note.save().then(savedNote => {
     response.json(savedNote)
   })
+  .catch(error => next(error))
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id)
   .then(note => {
     if (note) {
@@ -88,7 +88,7 @@ app.get('/api/notes/:id', (request, response) => {
   })*/
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
   .then(() => {
     response.status(204).end()
@@ -108,7 +108,10 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+  }  
+  else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
