@@ -2,7 +2,7 @@
 const express = require('express')
 const cors = require('cors')
 const app = express()
-const dns = require('dns')
+//const dns = require('dns')
 //const mongoose = require('mongoose')
 const Note = require('./models/note')
 
@@ -68,19 +68,19 @@ app.post('/api/notes', (request, response, next) => {
   note.save().then(savedNote => {
     response.json(savedNote)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id)
-  .then(note => {
-    if (note) {
-      response.json(note)
-    } else {
-      response.status(404).end()
-    }
-  })  
-  .catch(error => next(error))
+    .then(note => {
+      if (note) {
+        response.json(note)
+      } else {
+        response.status(404).end()
+      }
+    })  
+    .catch(error => next(error))
   /*.catch(error => {
     console.log(error)
     //response.status(500).end()
@@ -90,14 +90,14 @@ app.get('/api/notes/:id', (request, response, next) => {
 
 app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
-  .then(() => {
-    response.status(204).end()
-  })
-  .catch(error => next(error))
+    .then(() => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 const unknownEndpoint = (request, response) => {
-    console.log('error')
-    response.statusMessage = 'unknown endpoint'
+  console.log('error')
+  response.statusMessage = 'unknown endpoint'
   response.status(404).send()
 }
 

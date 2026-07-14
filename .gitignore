@@ -32,7 +32,9 @@ pnpm-debug.log*
 # ================================
 # Editor / IDE
 # ================================
-.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
 .idea/
 *.suo
 *.ntvs*
