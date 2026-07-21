@@ -19,6 +19,9 @@ to run the linter
 
 to fix problems
     npx eslint . --fix 
+
+to run test 
+    npm test -- test/note_api.test.js
 ------
 -- thingsI like 
     * if we add debugger in some line, if we see on the console, the execution stops in the line, we can check the code there.
