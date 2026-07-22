@@ -5,13 +5,30 @@ const supertest = require('supertest')
 const app = require('../app')
 const helper = require('./test_helper')
 const Note = require('../models/note')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
+  let testUser
+
   beforeEach(async () => {
     await Note.deleteMany({})
-    await Note.insertMany(helper.initialNotes)
+    await User.deleteOne({ username: 'notetester' })
+
+    testUser = new User({ username: 'notetester', name: 'Note Tester', passwordHash: 'whatever' })
+    await testUser.save()
+
+    const savedNotes = await Note.insertMany(
+      helper.initialNotes.map(note => ({ ...note, user: testUser._id }))
+    )
+
+    testUser.notes = savedNotes.map(note => note._id)
+    await testUser.save()
+  })
+
+  after(async () => {
+    await User.deleteOne({ username: 'notetester' })
   })
 
   test('notes are returned as json', async () => {
@@ -44,7 +61,7 @@ describe('when there is initially some notes saved', () => {
         .expect(200)
         .expect('Content-Type', /application\/json/)
 
-      assert.deepStrictEqual(resultNote.body, noteToView)
+      assert.deepStrictEqual(resultNote.body, JSON.parse(JSON.stringify(noteToView)))
     })
 
     test('fails with statuscode 404 if note does not exist', async () => {
@@ -65,6 +82,7 @@ describe('when there is initially some notes saved', () => {
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
+        userId: testUser.id,
       }
 
       await api
@@ -81,7 +99,20 @@ describe('when there is initially some notes saved', () => {
     })
 
     test('fails with status code 400 if data invalid', async () => {
-      const newNote = { important: true }
+      const newNote = { important: true, userId: testUser.id }
+
+      await api.post('/api/notes').send(newNote).expect(400)
+
+      const notesAtEnd = await helper.notesInDb()
+
+      assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
+    })
+
+    test('fails with status code 400 if userId missing or invalid', async () => {
+      const newNote = {
+        content: 'this note has no valid owner',
+        important: false,
+      }
 
       await api.post('/api/notes').send(newNote).expect(400)
 

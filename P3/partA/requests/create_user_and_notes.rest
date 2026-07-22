@@ -1,0 +1,33 @@
+# @name createUser
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "name": "Matti Luukkainen",
+  "password": "salainen"
+}
+
+###
+
+# @name createNote1
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "HTML is easy",
+  "important": true,
+  "userId": "{{createUser.response.body.id}}"
+}
+
+###
+
+# @name createNote2
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+
+{
+  "content": "Browser can execute only JavaScript",
+  "important": false,
+  "userId": "{{createUser.response.body.id}}"
+}
