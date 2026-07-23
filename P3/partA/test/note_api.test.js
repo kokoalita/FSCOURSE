@@ -1,5 +1,6 @@
 const assert = require('node:assert')
 const { test, after, beforeEach, describe } = require('node:test')
+const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
@@ -11,12 +12,14 @@ const api = supertest(app)
 
 describe('when there is initially some notes saved', () => {
   let testUser
+  let token
 
   beforeEach(async () => {
     await Note.deleteMany({})
     await User.deleteOne({ username: 'notetester' })
 
-    testUser = new User({ username: 'notetester', name: 'Note Tester', passwordHash: 'whatever' })
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    testUser = new User({ username: 'notetester', name: 'Note Tester', passwordHash })
     await testUser.save()
 
     const savedNotes = await Note.insertMany(
@@ -25,6 +28,12 @@ describe('when there is initially some notes saved', () => {
 
     testUser.notes = savedNotes.map(note => note._id)
     await testUser.save()
+
+    const loginResult = await api
+      .post('/api/login')
+      .send({ username: 'notetester', password: 'sekret' })
+
+    token = loginResult.body.token
   })
 
   after(async () => {
@@ -82,11 +91,11 @@ describe('when there is initially some notes saved', () => {
       const newNote = {
         content: 'async/await simplifies making async calls',
         important: true,
-        userId: testUser.id,
       }
 
       await api
         .post('/api/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send(newNote)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -99,22 +108,43 @@ describe('when there is initially some notes saved', () => {
     })
 
     test('fails with status code 400 if data invalid', async () => {
-      const newNote = { important: true, userId: testUser.id }
+      const newNote = { important: true }
 
-      await api.post('/api/notes').send(newNote).expect(400)
+      await api
+        .post('/api/notes')
+        .set('Authorization', `Bearer ${token}`)
+        .send(newNote)
+        .expect(400)
 
       const notesAtEnd = await helper.notesInDb()
 
       assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
     })
 
-    test('fails with status code 400 if userId missing or invalid', async () => {
+    test('fails with status code 401 if token is missing', async () => {
       const newNote = {
-        content: 'this note has no valid owner',
+        content: 'this note has no valid token',
         important: false,
       }
 
-      await api.post('/api/notes').send(newNote).expect(400)
+      await api.post('/api/notes').send(newNote).expect(401)
+
+      const notesAtEnd = await helper.notesInDb()
+
+      assert.strictEqual(notesAtEnd.length, helper.initialNotes.length)
+    })
+
+    test('fails with status code 401 if token is invalid', async () => {
+      const newNote = {
+        content: 'this note has an invalid token',
+        important: false,
+      }
+
+      await api
+        .post('/api/notes')
+        .set('Authorization', 'Bearer invalidtoken')
+        .send(newNote)
+        .expect(401)
 
       const notesAtEnd = await helper.notesInDb()
 

@@ -15,7 +15,7 @@ POST http://localhost:3001/api/notes
 Content-Type: application/json
 
 {
-  "content": "HTML is easy",
+  "content": "HTML is easy 2",
   "important": true,
   "userId": "{{createUser.response.body.id}}"
 }

@@ -1,5 +1,16 @@
+# @name login
+POST http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "salainen"
+}
+
+###
 POST  http://localhost:3001/api/notes
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
   "content": "GET and POST are the most important methods of HTTP protocol",
