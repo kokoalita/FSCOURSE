@@ -1,20 +1,4 @@
-$body = @{
-    id        = "4"
-    content   = "GET and POST are the most important methods of HTTP protocol"
-    important = $true
-} | ConvertTo-Json
-
-Write-Output $body
-$response = Invoke-WebRequest -Uri "http://localhost:3001/api/notes" -Method Post -Body $body -ContentType "application/json"
-
-$response.StatusCode
-$response.Content
-
-------------
-Invoke-WebRequest -Uri "http://localhost:3001/api/notes" -Method Post -Body (@{id="3"; content="GET and POST are the most important methods of HTTP protocol"; important=$true} | ConvertTo-Json) -ContentType "application/json"
-
-------------
-# 1) Create a user, then use the returned id to create 2 notes for that user
+# Create a user, then use the returned id to create 2 notes for that user
 
 $userBody = @{
     username = "mluukkai"
